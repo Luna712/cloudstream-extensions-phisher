@@ -1,0 +1,8 @@
+{
+    "name": "Phisher Repo (Fork)",
+    "description": "Phisher Repository (Fork)",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/Luna712/cloudstream-extensions-phisher/refs/heads/builds/plugins.json"
+    ]
+  }
