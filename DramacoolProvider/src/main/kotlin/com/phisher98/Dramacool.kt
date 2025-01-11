@@ -14,7 +14,7 @@ class Dramacool : MainAPI() {
     )
     override var lang = "en"
 
-    override var mainUrl = "https://dramacool.bg"
+    override var mainUrl = "https://dramacool.ba"
     override var name = "Dramacool"
 
     override val hasMainPage = true
