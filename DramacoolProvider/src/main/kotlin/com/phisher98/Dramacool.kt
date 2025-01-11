@@ -83,7 +83,7 @@ class Dramacool : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val url= app.get("$mainUrl$data").document.selectFirst("div.anime_muti_link ul li.kvid")?.attr("data-video") ?: return false
+        val url= app.get("$mainUrl$data").document.selectFirst("div.anime_muti_link ul li")?.attr("data-video") ?: return false
         loadExtractor(url, mainUrl, subtitleCallback, callback)
         return true
     }
