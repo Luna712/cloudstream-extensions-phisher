@@ -39,7 +39,7 @@ class Dramacool : MainAPI() {
         val title = selectFirst("h3")?.text() ?: return null
         val href = fixUrlNull(selectFirst("a")?.attr("href")) ?: return null
         val posterUrl = fixUrlNull(selectFirst("a img")?.attr("data-original"))
-        return newTvSeriesSearchResponse(title, href,TvType.TvSeries) {
+        return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
             this.posterUrl = posterUrl
         }
     }
@@ -124,7 +124,7 @@ class Dramacool : MainAPI() {
     fun String?.createSlug(): String? {
         return this?.filter { it.isWhitespace() || it.isLetterOrDigit() }
             ?.trim()
-            ?.replace("\\s+".toRegex(), "-")
+            ?.replace("\\s+".toRegex(), "+")
             ?.lowercase()
     }
 
