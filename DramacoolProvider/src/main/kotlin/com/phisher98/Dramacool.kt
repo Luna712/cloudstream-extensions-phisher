@@ -65,11 +65,11 @@ class Dramacool : MainAPI() {
                 it.select("img").attr("src")
             )
         }
-        val description=document.selectFirst("div.info > p:nth-child(6)")?.text()?.trim() ?: return null
-        val posterurl=document.selectFirst("div.details img")?.attr("src") ?: return null
+        val description=document.selectFirst("div.info > p:nth-child(6)")?.text()?.trim() ?: ""
+        val posterurl=document.selectFirst("div.details img")?.attr("src")
         val episodes = document.select("ul.list-episode-item-2 li").mapNotNull { el ->
             val name=el.selectFirst("a h3")?.text()?.substringAfter("Episode")?.trim()
-            val href=el.selectFirst("a")?.attr("href") ?:""
+            val href=el.selectFirst("a")?.attr("href") ?: ""
             Episode(href, "Episode $name")
         }.reversed()
 
