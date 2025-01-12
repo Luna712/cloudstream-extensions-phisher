@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.argamap
 import com.lagradost.cloudstream3.extractors.MixDrop
+import com.lagradost.cloudstream3.extractors.Mp4Upload
 import com.lagradost.cloudstream3.extractors.StreamWishExtractor
 import com.lagradost.cloudstream3.extractors.VidhideExtractor
 import com.lagradost.cloudstream3.extractors.helper.GogoHelper
@@ -20,6 +21,11 @@ class dlions : VidhideExtractor() {
 
 class MixDropSi : MixDrop() {
     override var mainUrl = "https://mixdrop.si"
+}
+
+class Vkspeed : Mp4Upload() {
+    override var name = "VKspeed"
+    override var mainUrl = "https://vkspeed.com"
 }
 
 class DramacoolExtractor : StreamWishExtractor() {
