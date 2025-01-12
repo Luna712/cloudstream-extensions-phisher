@@ -53,8 +53,9 @@ class Dramacool : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val detailsUrl = url.substringBefore("-episode").replace("video-watch", "drama-detail")
-        val document = app.get(detailsUrl, referer = "$mainUrl/", timeout = 10L).document
+        val document = app.get(url, referer = "$mainUrl/", timeout = 10L).document
+        val detailsUrl = document.selectFirst("div.category > a")?.attr("href") ?:
+            url.substringBefore("-episode").replace("video-watch", "drama-detail")
         val title = document.selectFirst("h1")?.text()?.trim() ?: ""
         val actors = document.select("div.item a").map {
             Actor(
