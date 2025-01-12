@@ -23,14 +23,14 @@ class MixDropSi : MixDrop() {
     override var mainUrl = "https://mixdrop.si"
 }
 
-class Vkspeed : Mp4Upload() {
-    override var name = "VKspeed"
-    override var mainUrl = "https://vkspeed.com"
-}
-
 class DramacoolExtractor : StreamWishExtractor() {
     override var name = "Dramacool"
     override var mainUrl = "https://dramacool.men"
+}
+
+class Vkspeed : StreamWishExtractor() {
+    override var name = "VKspeed"
+    override var mainUrl = "https://vkspeed.com"
 }
 
 class dhtpre : StreamWishExtractor() {
