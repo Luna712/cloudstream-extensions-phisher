@@ -8,9 +8,9 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Element
 
-class DramacoolLite : Dramacool() {
+class Dramacool2 : Dramacool() {
     override var mainUrl = "https://dramacool.ba"
-    override var name = "DramacoolLite"
+    override var name = "Dramacool2"
 }
 
 open class Dramacool : MainAPI() {
