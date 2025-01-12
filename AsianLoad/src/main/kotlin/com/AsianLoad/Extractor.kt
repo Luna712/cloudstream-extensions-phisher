@@ -38,6 +38,10 @@ class asianbxkiun : Embasic() {
 class AsianLoadInfo : Embasic() {
     override var mainUrl = "https://asianload.info"
     override val requiresReferer = false
+
+    override fun getExtractorUrl(id: String): String {
+        return "$mainUrl/watch?v=$id"
+    }
 }
 
 open class Embasic : ExtractorApi() {
