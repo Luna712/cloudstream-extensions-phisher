@@ -33,6 +33,7 @@ class DramacoolExtractor : StreamWishExtractor() {
 class Vkspeed : ExtractorApi() {
     override var name = "VKspeed"
     override var mainUrl = "https://asianload.org"
+    override val requiresReferer = true
 
     private val sourceRegex = Regex("""sources:[\W\w]*?file:\s*?["'](.*?)["']""")
     override suspend fun getUrl(url: String, referer: String?): List<ExtractorLink> {
