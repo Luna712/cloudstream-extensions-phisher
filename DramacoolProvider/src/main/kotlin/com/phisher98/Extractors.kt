@@ -4,7 +4,6 @@ import android.util.Log
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.argamap
-import com.lagradost.cloudstream3.extractors.AsianLoad
 import com.lagradost.cloudstream3.extractors.MixDrop
 import com.lagradost.cloudstream3.extractors.StreamWishExtractor
 import com.lagradost.cloudstream3.extractors.VidhideExtractor
@@ -28,8 +27,12 @@ class DramacoolExtractor : StreamWishExtractor() {
     override var mainUrl = "https://dramacool.men"
 }
 
-class Vkspeed : AsianLoad() {
+class Vkspeed : StreamWishExtractor() {
     override var mainUrl = "https://asianload.org"
+
+    override fun getExtractorUrl(id: String): String {
+        return "$mainUrl/view?id=$id"
+    }
 }
 
 class dhtpre : StreamWishExtractor() {
