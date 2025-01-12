@@ -34,13 +34,16 @@ class Vkspeed : StreamWishExtractor() {
 }
 
 class dhtpre : StreamWishExtractor() {
+    override var name = "EarnVids"
     override var mainUrl = "https://dhtpre.com"
 }
 
 class nikaplayerr : StreamWishExtractor() {
+    override var name = "EarnVids"
     override var mainUrl = "https://nikaplayerr.com"
 }
 
 class peytonepre : StreamWishExtractor() {
+    override var name = "EarnVids"
     override var mainUrl = "https://peytonepre.com"
 }
