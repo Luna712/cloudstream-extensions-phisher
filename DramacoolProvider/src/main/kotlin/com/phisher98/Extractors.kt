@@ -31,6 +31,10 @@ class DramacoolExtractor : StreamWishExtractor() {
 class Vkspeed : StreamWishExtractor() {
     override var name = "VKspeed"
     override var mainUrl = "https://vkspeed.com"
+
+    override fun getExtractorUrl(id: String): String {
+        return "https://vkspeed.com/embed-1qm2yelcgkxt.html"
+    }
 }
 
 class dhtpre : StreamWishExtractor() {
