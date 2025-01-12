@@ -45,6 +45,15 @@ class AsianLoadInfo : StreamWishExtractor() {
     }
 }
 
+class AsianLoadOrg : StreamWishExtractor() {
+    override var mainUrl = "https://asianload.org"
+    override val name = "AsianHD"
+
+    override fun getExtractorUrl(id: String): String {
+        return "$mainUrl/view?id=$id"
+    }
+}
+
 open class Embasic : ExtractorApi() {
     override var mainUrl = "https://embasic.pro"
     override val name = "AsianHD"
