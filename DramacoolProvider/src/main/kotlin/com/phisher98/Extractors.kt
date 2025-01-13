@@ -12,6 +12,7 @@ import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.httpsify
 import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.CommonActivity.showToast
 
 class dlions : VidhideExtractor() {
     override var name = "Dlions"
@@ -31,6 +32,7 @@ class Vkspeed : StreamWishExtractor() {
     override var mainUrl = "https://asianload.org"
 
     override fun getExtractorUrl(id: String): String {
+        showToast("id: $id")
         return "$mainUrl/view?id=$id"
     }
 }
