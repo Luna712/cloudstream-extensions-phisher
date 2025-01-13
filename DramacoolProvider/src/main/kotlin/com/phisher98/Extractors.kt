@@ -16,7 +16,6 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import android.widget.Toast
 import com.lagradost.cloudstream3.CommonActivity.showToast
 
-import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.USER_AGENT
 import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.getAndUnpack
