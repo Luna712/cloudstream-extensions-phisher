@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.Phisher98.LanguageSelectFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lagradost.cloudstream3.R
 import com.phisher98.settings.SettingsFragment
 import com.phisher98.settings.ToggleFragment
 
@@ -59,13 +61,12 @@ class MainSettingsFragment(
         languagechange.setImageDrawable(getDrawable("settings_icon"))
         featureCard.setImageDrawable(getDrawable("settings_icon"))
         toggleproviders.setImageDrawable(getDrawable("settings_icon"))
-        saveIcon.setImageDrawable(getDrawable("save_icon"))
+        saveIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.baseline_save_as_24))
 
         loginCard.makeTvCompatible()
         featureCard.makeTvCompatible()
         toggleproviders.makeTvCompatible()
         languagechange.makeTvCompatible()
-
 
         saveIcon.makeTvCompatible()
 
