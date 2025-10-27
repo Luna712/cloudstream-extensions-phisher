@@ -61,7 +61,11 @@ class MainSettingsFragment(
         languagechange.setImageDrawable(getDrawable("settings_icon"))
         featureCard.setImageDrawable(getDrawable("settings_icon"))
         toggleproviders.setImageDrawable(getDrawable("settings_icon"))
-        saveIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.baseline_save_as_24))
+        context?.let { ctx ->
+            saveIcon.setImageDrawable(
+                ContextCompat.getDrawable(ctx, R.drawable.baseline_save_as_24)
+            )
+        }
 
         loginCard.makeTvCompatible()
         featureCard.makeTvCompatible()
