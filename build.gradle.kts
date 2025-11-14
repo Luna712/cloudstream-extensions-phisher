@@ -68,6 +68,14 @@ subprojects {
         }
     }
 
+    java {
+	    // Use Java 17 toolchain even if a higher JDK runs the build.
+        // We still use Java 8 for now which higher JDKs have deprecated.
+	    toolchain {
+		    languageVersion.set(JavaLanguageVersion.of(17))
+    	}
+    }
+
     dependencies {
         val implementation by configurations
         val cloudstream by configurations
