@@ -68,14 +68,6 @@ subprojects {
         }
     }
 
-    java {
-	    // Use Java 17 toolchain even if a higher JDK runs the build.
-        // We still use Java 8 for now which higher JDKs have deprecated.
-	    toolchain {
-		    languageVersion.set(JavaLanguageVersion.of(17))
-    	}
-    }
-
     dependencies {
         val implementation by configurations
         val cloudstream by configurations
@@ -95,6 +87,14 @@ subprojects {
         implementation("app.cash.quickjs:quickjs-android:0.9.2")
         implementation("com.github.vidstige:jadb:v1.2.1")
         implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+    }
+}
+
+java {
+	// Use Java 17 toolchain even if a higher JDK runs the build.
+    // We still use Java 8 for now which higher JDKs have deprecated.
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
