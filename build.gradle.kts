@@ -32,7 +32,6 @@ fun Project.android(configuration: BaseExtension.() -> Unit) = extensions.getByN
 
 subprojects {
     apply(plugin = "com.android.library")
-    apply(plugin = "java-library")
     apply(plugin = "kotlin-android")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
@@ -42,8 +41,6 @@ subprojects {
     }
 
     java {
-	    // Use Java 17 toolchain even if a higher JDK runs the build.
-        // We still use Java 8 for now which higher JDKs have deprecated.
 	    toolchain {
 		    languageVersion.set(JavaLanguageVersion.of(17))
     	}
@@ -70,7 +67,9 @@ subprojects {
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
                     "-Xno-receiver-assertions",
-                    "-Xannotation-default-target=param-property"
+                    "-Xannotation-default-target=param-property",
+                    // Java 8 is deprecated when running with newer JDKs so suppress the warning.
+                    "-Xlint:-options"
                 )
             }
         }
