@@ -79,7 +79,7 @@ subprojects {
         implementation("org.jsoup:jsoup:1.21.2")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.20.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
         implementation("org.mozilla:rhino:1.8.0")
         implementation("me.xdrop:fuzzywuzzy:1.4.0")
         implementation("com.google.code.gson:gson:2.13.2")
