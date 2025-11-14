@@ -1,5 +1,6 @@
 import com.android.build.gradle.BaseExtension
 import com.lagradost.cloudstream3.gradle.CloudstreamExtension
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -30,7 +31,7 @@ fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) = extens
 
 fun Project.android(configuration: BaseExtension.() -> Unit) {
     extensions.getByName<BaseExtension>("android").apply {
-        (extensions.findByName("java") as? org.gradle.api.plugins.JavaPluginExtension)?.apply {
+        (extensions.findByName("java") as? JavaPluginExtension)?.apply {
             // Use Java 17 toolchain even if a higher JDK runs the build.
             // We still use Java 8 for now which higher JDKs have deprecated.
             toolchain {
