@@ -24,14 +24,6 @@ allprojects {
         mavenCentral()
         maven("https://jitpack.io")
     }
-
-    java {
-	    // Use Java 17 toolchain even if a higher JDK runs the build.
-        // We still use Java 8 for now which higher JDKs have deprecated.
-	    toolchain {
-		    languageVersion.set(JavaLanguageVersion.of(17))
-    	}
-    }
 }
 
 fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) = extensions.getByName<CloudstreamExtension>("cloudstream").configuration()
