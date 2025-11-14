@@ -1,0 +1,47 @@
+name: Migrate to Version Catalog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Download migration tool
+        run: |
+          curl -L \
+            https://github.com/gradle/gradle-dependency-migrator/releases/latest/download/gradle-dependency-migrator.jar \
+            -o gradle-dependency-migrator.jar
+
+      - name: Run migration
+        run: |
+          echo "Running the dependency migration… brace yourself."
+          java -jar gradle-dependency-migrator.jar \
+            --root . \
+            --catalog-path gradle/libs.versions.toml \
+            --rewrite
+
+      - name: Commit and push results
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Automated migration to Gradle version catalog"
+            git push
+            echo "Migration complete and pushed."
+          fi
