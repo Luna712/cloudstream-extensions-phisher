@@ -92,3 +92,13 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+tasks.withType<JavaCompile>().configureEach {
+	// Use Java 17 toolchain even if a higher JDK runs the build.
+    // We still use Java 8 for now which higher JDKs have deprecated.
+    javaCompiler = javaToolchains {
+        compilerFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+}
