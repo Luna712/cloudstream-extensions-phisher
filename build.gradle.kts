@@ -32,12 +32,21 @@ fun Project.android(configuration: BaseExtension.() -> Unit) = extensions.getByN
 
 subprojects {
     apply(plugin = "com.android.library")
+    apply(plugin = "java")
     apply(plugin = "kotlin-android")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
     cloudstream {
         setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/phisher98/cloudstream-extensions-phisher")
         authors = listOf("Phisher98")
+    }
+
+    java {
+	    // Use Java 17 toolchain even if a higher JDK runs the build.
+        // We still use Java 8 for now which higher JDKs have deprecated.
+	    toolchain {
+		    languageVersion.set(JavaLanguageVersion.of(17))
+    	}
     }
 
     android {
@@ -91,14 +100,4 @@ subprojects {
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
-}
-
-tasks.withType<JavaCompile>().configureEach {
-	// Use Java 17 toolchain even if a higher JDK runs the build.
-    // We still use Java 8 for now which higher JDKs have deprecated.
-    javaCompiler = javaToolchains {
-        compilerFor {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
-    }
 }
