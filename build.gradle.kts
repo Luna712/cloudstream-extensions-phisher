@@ -61,9 +61,7 @@ subprojects {
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
                     "-Xno-receiver-assertions",
-                    "-Xannotation-default-target=param-property",
-                    // Java 8 is deprecated when running with newer JDKs so suppress the warnings.
-                    "-Xlint:-options"
+                    "-Xannotation-default-target=param-property"
                 )
             }
         }
