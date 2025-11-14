@@ -55,6 +55,13 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_1_8
         }
 
+        java {
+	        // Use Java 17 toolchain even if a higher JDK runs the build.
+            // We still use Java 8 for now which higher JDKs have deprecated.
+	        toolchain {
+		        languageVersion.set(JavaLanguageVersion.of(17))
+    	    }
+        }
 
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
@@ -62,7 +69,8 @@ subprojects {
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
-                    "-Xno-receiver-assertions"
+                    "-Xno-receiver-assertions",
+                    "-Xannotation-default-target=param-property"
                 )
             }
         }
