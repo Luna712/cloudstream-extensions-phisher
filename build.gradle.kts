@@ -40,12 +40,6 @@ subprojects {
         authors = listOf("Phisher98")
     }
 
-    java {
-	    toolchain {
-		    languageVersion.set(JavaLanguageVersion.of(17))
-    	}
-    }
-
     android {
         namespace = "com.phisher98"
 
