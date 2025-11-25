@@ -100,6 +100,8 @@ subprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
         implementation("com.github.vidstige:jadb:v1.2.1")
         implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+
+        implementation("androidx.annotation:annotation:1.9.1")
     }
 }
 
