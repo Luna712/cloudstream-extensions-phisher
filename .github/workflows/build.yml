@@ -149,7 +149,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          ls -R /usr/local/lib/android/sdk/platforms
           ./gradlew make makePluginsJson
           ./gradlew ensureJarCompatibility
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
