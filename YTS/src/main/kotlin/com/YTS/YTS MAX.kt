@@ -22,7 +22,7 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
 class YTSMX : YTS(){
-    override var mainUrl              = "https://yts.mx"
+    override var mainUrl              = "https://yts.lt"
     override var name                 = "YTS MX"
     override val hasMainPage          = true
     override var lang                 = "en"
@@ -30,6 +30,7 @@ class YTSMX : YTS(){
     override val hasDownloadSupport   = true
     override val supportedTypes       = setOf(TvType.Movie, TvType.Torrent)
     override val mainPage = mainPageOf(
+        "browse-movies" to "Latest",
         "browse-movies/0/all/all/0/featured/0/all" to "Featured Movies",
         "browse-movies/0/1080p.x265/all/0/latest/0/all" to "1080p Movies",
         "browse-movies/0/2160p/all/0/latest/0/all" to "4K Movies",
@@ -46,7 +47,7 @@ class YTSMX : YTS(){
         {
             url="$mainUrl/${request.data}?page=$page"
         }
-        val document = app.get(url).document
+        val document = app.get(url).documentLarge
         val home     = document.select("div.row div.browse-movie-wrap").mapNotNull { it.toSearchResult() }
 
         return newHomePageResponse(
@@ -73,7 +74,7 @@ class YTSMX : YTS(){
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val document = app.get(url).document
+        val document = app.get(url).documentLarge
         val title = document.selectFirst("#mobile-movie-info h1")?.text()?.trim() ?:"No Title"
         val poster = document.select("#movie-poster img").attr("src")
         val year = document.selectFirst("#mobile-movie-info h2")?.text()?.trim()?.toIntOrNull()
@@ -92,7 +93,7 @@ class YTSMX : YTS(){
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val document = app.get(data).document
+        val document = app.get(data).documentLarge
         val TRACKER_LIST_URL="https://newtrackon.com/api/stable"
         document.select("p.hidden-md.hidden-lg a").map {
             val infoHash=it.attr("href").substringAfter("download/")

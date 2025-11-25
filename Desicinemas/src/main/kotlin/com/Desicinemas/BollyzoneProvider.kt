@@ -18,11 +18,11 @@ class BollyzoneProvider : DesicinemasProvider() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val url = if (page == 1) request.data else "${request.data}page/$page/"
-        val doc = app.get(url, referer = "$mainUrl/").document
+        val doc = app.get(url, referer = "$mainUrl/").documentLarge
 
         val homePageList = mutableListOf<HomePageList>()
 
-        val headers = doc.select("h2.Title").filter { it->
+        val headers = doc.select("h2.Title").filter {
             it.text().contains("Shows", ignoreCase = true)
         }
         for (header in headers) {
@@ -38,7 +38,7 @@ class BollyzoneProvider : DesicinemasProvider() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$proxy?url=$mainUrl/?s=$query"
-        val doc = app.get(url, referer = "$mainUrl/").document
+        val doc = app.get(url, referer = "$mainUrl/").documentLarge
 
         val items = doc.select(".MovieList li").mapNotNull {
             it.toHomePageResult()
@@ -58,7 +58,7 @@ class BollyzoneProvider : DesicinemasProvider() {
         val title = selectFirst("h2.Title")?.text()?.trim() ?: return null
         val href = fixUrlNull(selectFirst("a")?.attr("href")) ?: return null
         val img = selectFirst("img")
-        val posterUrl = fixUrlNull(img?.getImageAttr())
+        val posterUrl ="$proxy?url=" + fixUrlNull(img?.getImageAttr())
 
         return newAnimeSearchResponse(title, href) {
             this.posterUrl = posterUrl
@@ -66,7 +66,7 @@ class BollyzoneProvider : DesicinemasProvider() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = app.get("$proxy?url=$url", referer = mainUrl, timeout = 10000).document
+        val doc = app.get("$proxy?url=$url", referer = mainUrl, timeout = 10000).documentLarge
 
         // Handle single movie under "series"
         if (url.contains("/series/")) {
@@ -82,7 +82,7 @@ class BollyzoneProvider : DesicinemasProvider() {
 
         // Handle TV series
         val title = doc.select("meta[property=og:title]").attr("content")
-        val posterUrl = doc.selectFirst("div.Image img")?.getImageAttr()
+        val posterUrl = "$proxy?url=" + doc.selectFirst("div.Image img")?.getImageAttr()
         val description = doc.select("meta[property=og:description]").attr("content")
         val tags = doc.select(".Genre a").map { it.text() }.distinct()
 
@@ -94,7 +94,7 @@ class BollyzoneProvider : DesicinemasProvider() {
 
         val episodes = (1..lastPageNumber).flatMap { page ->
             val pageUrl = "$proxy?url=$url/page/$page/"
-            val pageDoc = app.get(pageUrl, referer = mainUrl, timeout = 10000).document
+            val pageDoc = app.get(pageUrl, referer = mainUrl, timeout = 10000).documentLarge
 
             pageDoc.select("ul.MovieList li").mapNotNull { element ->
                 val epUrl = fixUrlNull(element.select("a").attr("href")) ?: return@mapNotNull null
@@ -105,7 +105,7 @@ class BollyzoneProvider : DesicinemasProvider() {
 
                 newEpisode(epUrl) {
                     name = epName
-                    this.posterUrl = epPoster
+                    this.posterUrl = "$proxy?url=$epPoster"
                 }
             }
         }.toMutableList()
@@ -123,7 +123,7 @@ class BollyzoneProvider : DesicinemasProvider() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get("${proxy}?url=${data}", referer = mainUrl).document.select(".MovieList .OptionBx").amap {
+        app.get("${proxy}?url=${data}", referer = mainUrl).documentLarge.select(".MovieList .OptionBx").amap {
             val name = it.select("p.AAIco-dns").text()
             val link = it.select("a").attr("href")
             val headers = mapOf(
@@ -134,9 +134,9 @@ class BollyzoneProvider : DesicinemasProvider() {
                 "Connection" to "keep-alive",
                 "Cache-Control" to "no-cache"
             )
-            val src = app.get(link, headers = headers).document
+            val src = app.get(link, headers = headers).documentLarge
             val iframe=src.selectFirst("#Proceed a[href]")?.attr("href").orEmpty()
-            val iframeURL = resolveIframeSrc(iframe) ?: return@amap
+            val iframeURL = resolveIframeSrc(iframe) ?: src.selectFirst("IFRAME")?.attr("src") ?: return@amap
             loadCustomExtractor(name,iframeURL,mainUrl,subtitleCallback, callback)
         }
         return true

@@ -54,7 +54,7 @@ open class Aniworld : MainAPI() {
         request: MainPageRequest
     ): HomePageResponse {
 
-        val document = app.get(mainUrl).document
+        val document = app.get(mainUrl).documentLarge
         val item = arrayListOf<HomePageList>()
         document.select("div.carousel").map { ele ->
             val header = ele.selectFirst("h2")?.text() ?: return@map
@@ -92,7 +92,7 @@ open class Aniworld : MainAPI() {
 
     @Suppress("LABEL_NAME_CLASH")
     override suspend fun load(url: String): LoadResponse? {
-        val document = app.get(url).document
+        val document = app.get(url).documentLarge
         val imdbid = document.select("div.series-title > a").attr("data-imdb")
 
         val isTvSeries = name.equals("Serienstream", ignoreCase = true)
@@ -129,12 +129,11 @@ open class Aniworld : MainAPI() {
         val episodes = mutableListOf<Episode>()
         document.select("div#stream > ul:first-child li").forEach { ele ->
             val pageLink = ele.selectFirst("a")?.attr("href") ?: return@forEach
-            val epsDocument = app.get(fixUrl(pageLink)).document
+            val epsDocument = app.get(fixUrl(pageLink)).documentLarge
 
             epsDocument.select("div#stream > ul:nth-child(4) li").forEach { eps ->
                 val epsLink = eps.selectFirst("a") ?: return@forEach
                 val seasonNumber = epsLink.attr("data-season-id").toIntOrNull() ?: 0
-                if (seasonNumber == 0) return@forEach
 
                 episodes.add(
                     newEpisode(fixUrl(epsLink.attr("href"))) {
@@ -167,7 +166,7 @@ open class Aniworld : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
+        val document = app.get(data).documentLarge
         document.select("div.hosterSiteVideo ul li").map {
                 Triple(
                     it.attr("data-lang-key"),

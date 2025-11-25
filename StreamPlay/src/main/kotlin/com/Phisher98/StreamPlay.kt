@@ -49,7 +49,6 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
     override var name = "StreamPlay"
     override val hasMainPage = true
     override val instantLinkLoading = true
-    override val useMetaLoadResponse = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(
         TvType.Movie,
@@ -210,7 +209,7 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
         const val soapy = "https://soapy.to"
         const val vidlink = "https://vidlink.pro"
         const val cinemaOSApi = "https://cinemaos.tech"
-        const val mappleTvApi = "https://mapple.tv"
+        const val mappleTvApi = "https://mapple.uk"
         const val vidnestApi = "https://backend.vidnest.fun"
         const val vidnestVercelApi = "https://vidnest-backend.vercel.app"
         const val mp4hydra = "https://mp4hydra.org"
@@ -218,6 +217,7 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
         const val vidPlusApi = "https://player.vidplus.to"
         const val Videasy = "https://api.videasy.net"
         const val XDmoviesAPI = "https://xdmovies.site"
+        const val kimcartoonAPI = "https://kimcartoon.si"
 
         fun getType(t: String?): TvType {
             return when (t) {
@@ -366,13 +366,10 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
         val simklid = runCatching {
             res.external_ids?.imdb_id?.takeIf { it.isNotBlank() }?.let { imdb ->
                 val path = if (type == TvType.Movie) "movies" else "tv"
-                val resJson = JSONObject(app.get("$simkl/$path/$imdb").text)
+                val resJson = JSONObject(app.get("$simkl/$path/$imdb?client_id=${com.lagradost.cloudstream3.BuildConfig.SIMKL_CLIENT_ID}").text)
                 resJson.optJSONObject("ids")?.optInt("simkl")?.takeIf { it != 0 }
             }
         }.getOrNull()
-
-
-
 
         if (type == TvType.TvSeries) {
             val lastSeason = res.last_episode_to_air?.season_number
@@ -413,6 +410,7 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
                             this.posterUrl = getImageUrl(eps.stillPath)
                             this.score = Score.from10(eps.voteAverage)
                             this.description = eps.overview
+                            this.runTime = eps.runTime
                         }.apply {
                             this.addDate(eps.airDate)
                         }
@@ -603,25 +601,47 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
         val disabledProviderIds = sharedPref
             ?.getStringSet("disabled_providers", emptySet())
             ?.toSet() ?: emptySet()
-
         val providersList = buildProviders().filter { it.id !in disabledProviderIds }
-
-        runAllAsync(
+        val authToken = token
+        runLimitedAsync( concurrency = 10,
             {
-                if (!res.isAnime) invokeSubtitleAPI(res.imdbId, res.season, res.episode, subtitleCallback)
+                try {
+                    if (!res.isAnime) {
+                        invokeSubtitleAPI(res.imdbId, res.season, res.episode, subtitleCallback)
+                    }
+                } catch (_: Throwable) {
+                    // ignore failure but do not cancel the rest
+                }
             },
             {
-                if (!res.isAnime) invokeWyZIESUBAPI(res.imdbId, res.season, res.episode, subtitleCallback)
+                try {
+                    if (!res.isAnime) {
+                        invokeWyZIESUBAPI(res.imdbId, res.season, res.episode, subtitleCallback)
+                    }
+                } catch (_: Throwable) {
+                    // ignore failure
+                }
             },
             *providersList.map { provider ->
                 suspend {
-                    provider.invoke(res, subtitleCallback, callback, token ?: "", dahmerMoviesAPI)
+                    try {
+                        provider.invoke(
+                            res,
+                            subtitleCallback,
+                            callback,
+                            authToken ?: "",
+                            dahmerMoviesAPI
+                        )
+                    } catch (_: Throwable) {
+                        // provider failure shouldn't kill others
+                    }
                 }
             }.toTypedArray()
         )
 
         return true
     }
+
 
 
     data class LinkData(
@@ -713,6 +733,7 @@ open class StreamPlay(val sharedPref: SharedPreferences? = null) : TmdbProvider(
         @get:JsonProperty("vote_average") val voteAverage: Double? = null,
         @get:JsonProperty("episode_number") val episodeNumber: Int? = null,
         @get:JsonProperty("season_number") val seasonNumber: Int? = null,
+        @get:JsonProperty("runtime") val runTime: Int? = null
     )
 
     data class MediaDetailEpisodes(

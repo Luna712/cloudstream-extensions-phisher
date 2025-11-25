@@ -22,7 +22,7 @@ class Animexin : MainAPI() {
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val document = app.get("$mainUrl/${request.data}&page=$page").document
+        val document = app.get("$mainUrl/${request.data}&page=$page").documentLarge
         val home     = document.select("div.listupd > article").mapNotNull { it.toSearchResult() }
 
         return newHomePageResponse(
@@ -45,61 +45,38 @@ class Animexin : MainAPI() {
     }
 
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val searchResponse = mutableListOf<SearchResponse>()
-
-        for (i in 1..3) {
-            val document = app.get("${mainUrl}/page/$i/?s=$query").document
-
-            val results = document.select("div.listupd > article").mapNotNull { it.toSearchResult() }
-
-            if (!searchResponse.containsAll(results)) {
-                searchResponse.addAll(results)
-            } else {
-                break
-            }
-
-            if (results.isEmpty()) break
-        }
-
-        return searchResponse
+    override suspend fun search(query: String,page: Int): SearchResponseList {
+        val document = app.get("${mainUrl}/page/$page/?s=$query").documentLarge
+        val results = document.select("div.listupd > article").mapNotNull { it.toSearchResult() }.toNewSearchResponseList()
+        return results
     }
 
     @Suppress("SuspiciousIndentation")
     override suspend fun load(url: String): LoadResponse {
-        val document = app.get(url).document
-        val title       = document.selectFirst("h1.entry-title")?.text()?.trim().toString()
-        val href=document.selectFirst(".eplister li > a")?.attr("href") ?:""
-        var poster = document.select("div.ime > img").attr("src")
+        val document = app.get(url).documentLarge
+        val title = document.selectFirst("h1.entry-title")?.text()?.trim().toString()
+        val href=document.selectFirst("div.eplister > ul > li a")?.attr("href") ?:""
+        val poster = document.select("div.thumb img").attr("src").ifEmpty { document.selectFirst("meta[property=og:image]")?.attr("content")?.trim().toString() }
         val description = document.selectFirst("div.entry-content")?.text()?.trim()
         val type=document.selectFirst(".spe")?.text().toString()
         val tvtag=if (type.contains("Movie")) TvType.Movie else TvType.TvSeries
         return if (tvtag == TvType.TvSeries) {
-            val Eppage= document.selectFirst(".eplister li > a")?.attr("href") ?:""
-            val doc= app.get(Eppage).document
-            val episodes=doc.select("div.episodelist > ul > li").map { info->
+            val episodes=document.select("div.eplister > ul > li").map { info->
                         val href1 = info.select("a").attr("href")
-                        val episode = info.select("a span").text().substringAfter("-").substringBeforeLast("-")
                         val posterr=info.selectFirst("a img")?.attr("src") ?:""
+                        val epnum = info.selectFirst("div.epl-num")?.text()?.toIntOrNull()
                         newEpisode(href1)
                         {
-                            this.name=episode
+                            this.episode = epnum
+                            this.name="Episode $epnum"
                             this.posterUrl=posterr
                         }
-            }
-            if (poster.isEmpty())
-            {
-                poster=document.selectFirst("meta[property=og:image]")?.attr("content")?.trim().toString()
             }
             newTvSeriesLoadResponse(title, url, TvType.Anime, episodes.reversed()) {
                 this.posterUrl = poster
                 this.plot = description
             }
         } else {
-            if (poster.isEmpty())
-            {
-                poster=document.selectFirst("meta[property=og:image]")?.attr("content")?.trim().toString()
-            }
             newMovieLoadResponse(title, url, TvType.Movie, href) {
                 this.posterUrl = poster
                 this.plot = description
@@ -108,7 +85,7 @@ class Animexin : MainAPI() {
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val document = app.get(data).document
+        val document = app.get(data).documentLarge
         document.select(".mobius option").forEach { server->
             val base64 = server.attr("value")
             val decoded=base64Decode(base64)

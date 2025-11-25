@@ -331,7 +331,7 @@ class AnimePahe : MainAPI() {
     ): Boolean {
         val parsed = parseJson<LinkLoadData>(data)
         val episodeUrl = parsed.getUrl() ?: ""
-        val document= app.get(episodeUrl, headers= headers).document
+        val document= app.get(episodeUrl, headers= headers).documentLarge
         document.select("#resolutionMenu button")
             .map {
                 val dubText = it.select("span").text().lowercase()
@@ -343,10 +343,9 @@ class AnimePahe : MainAPI() {
                 val source = match?.groupValues?.getOrNull(1)?.trim() ?: "Unknown"
                 val quality = match?.groupValues?.getOrNull(2)?.substringBefore("p")?.toIntOrNull()
                     ?: Qualities.Unknown.value
-                Log.d("Phisher","$source $quality")
 
                 val href = it.attr("data-src")
-                if ("kwik.si" in href) {
+                if ("kwik" in href) {
                     loadCustomExtractor(
                         "Animepahe $source [$type]",
                         href,
