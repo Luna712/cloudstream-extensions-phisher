@@ -24,5 +24,5 @@ cloudstream {
     // random cc logo i found
     iconUrl = "https://manga.all-wish.me/logo4.png"
 
-    isCrossPlatform = false
+    isCrossPlatform = true
 }
