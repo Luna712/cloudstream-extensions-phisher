@@ -7,7 +7,7 @@ dependencies {
 
     // FIXME remove this when crossplatform is fully supported
     val cloudstream by configurations
-    cloudstream("com.lagradost:cloudstream3:pre-release")
+    cloudstream("com.lagradost:cloudstream3:v4.6.0")
 }
 // use an integer for version numbers
 version = 14
