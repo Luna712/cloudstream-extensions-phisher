@@ -1,4 +1,4 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.lagradost.cloudstream3.gradle.CloudstreamExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.register
@@ -13,9 +13,9 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.13.1")
+        classpath("com.android.tools.build:gradle:9.0.0-beta03")
         classpath("com.github.Luna712:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.21")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0-RC")
     }
 }
 
@@ -29,9 +29,9 @@ allprojects {
 
 fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) = extensions.getByName<CloudstreamExtension>("cloudstream").configuration()
 
-fun Project.android(configuration: BaseExtension.() -> Unit) {
-    extensions.getByName<BaseExtension>("android").apply {
-        (extensions.findByName("java") as? JavaPluginExtension)?.apply {
+fun Project.android(configuration: LibraryExtension.() -> Unit) {
+    extensions.getByName<LibraryExtension>("android").apply {
+        project.extensions.findByType(JavaPluginExtension::class.java)?.apply {
             // Use Java 17 toolchain even if a higher JDK runs the build.
             // We still use Java 8 for now which higher JDKs have deprecated.
             toolchain {
@@ -45,7 +45,6 @@ fun Project.android(configuration: BaseExtension.() -> Unit) {
 
 subprojects {
     apply(plugin = "com.android.library")
-    apply(plugin = "kotlin-android")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
     cloudstream {
@@ -55,10 +54,13 @@ subprojects {
 
     android {
         namespace = "com.phisher98"
+        compileSdk = 36
 
         defaultConfig {
             minSdk = 21
-            compileSdkVersion(36)
+        }
+
+        lint {
             targetSdk = 36
         }
 
@@ -98,6 +100,8 @@ subprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
         implementation("com.github.vidstige:jadb:v1.2.1")
         implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+
+        implementation("androidx.annotation:annotation:1.9.1")
     }
 }
 
