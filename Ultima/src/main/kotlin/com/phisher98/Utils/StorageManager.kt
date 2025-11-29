@@ -3,16 +3,14 @@ package com.phisher98
 // import com.phisher98.UltimaUtils.Provider
 
 import com.lagradost.api.Log
-import com.lagradost.cloudstream3.Prerelease
 import com.phisher98.UltimaUtils.ExtensionInfo
 import com.phisher98.UltimaUtils.MediaProviderState
 import com.phisher98.UltimaUtils.SectionInfo
 import com.phisher98.WatchSyncUtils.WatchSyncCreds
 import com.lagradost.cloudstream3.APIHolder.allProviders
-import com.lagradost.cloudstream3.CloudStreamApp.Companion.getKey
+import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
 import com.lagradost.cloudstream3.AcraApplication.Companion.setKey
 
-@OptIn(Prerelease::class)
 object UltimaStorageManager {
 
     // #region - custom data variables
