@@ -87,7 +87,7 @@ subprojects {
 
         // Other dependencies
         implementation(kotlin("stdlib"))
-        implementation("com.github.Blatzar:NiceHttp:0.4.13")
+        implementation("com.github.Blatzar:NiceHttp:0.4.16")
         implementation("org.jsoup:jsoup:1.21.2")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.5")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.13.5")
